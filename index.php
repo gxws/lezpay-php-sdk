@@ -65,8 +65,7 @@ if($action == 'callback' && isset($_GET['jumpType'])){
 
 define('IN_LEZPAY', 1);	//定义app入口
 
-require_once 'config.sample.php';	//配置文件
-//require_once 'config.php';	//配置文件
+require_once 'config.php';	//配置文件
 require_once 'lezpay.class.php';	//sdk
 
 
