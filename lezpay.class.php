@@ -65,11 +65,7 @@ class LezPay {
 	 * @return {array} 以数组格式返回结果数据
 	 */
 	public function queryPayBill($data){
-		$result = $this->getData('queryPayBill', $data);
-		if(!(isset($data['retType']) && $data['retType'] == 'JSON')){
-			$this->fixedXmlData(&$result['queryPayBillsInfoOutList'], 'QueryPayBillsInfoOut');
-		}
-		return $result;
+		return $this->getData('queryPayBill', $data);
 	}
 
 	/**
@@ -96,18 +92,6 @@ class LezPay {
 		$data['appId'] = $this->appId;
 		$result = $this->curl($this->baseUrl . $action, http_build_query($data), 'webkit');
 		return $this->fixedBool($this->obj2Arr(isset($data['retType']) && $data['retType'] == 'JSON' ? json_decode($result) : simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA), 1));
-	}
-
-	/**
-	 * xml数据数组格式化兼容方法
-	 * @method fixedXmlData
-	 * @since 1.0.0
-	 * @param {array} $data 数据数组指针
-	 * @param {string} $name 需要兼容的数组属性名
-	 * @return {none} 
-	 */
-	public function fixedXmlData($data, $name){
-		$data = isset($data[$name][0]) ? $data[$name] : array($data[$name]);
 	}
 
 	/**

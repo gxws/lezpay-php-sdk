@@ -52,8 +52,8 @@ if($action == 'callback' && isset($_GET['jumpType'])){
 			$str = '<h1>乐众支付系统出错</h1>';
 			break;
 	}
-	$str .= '<p>billId: ' . $_GET['billId'] . '</p>';
-	$str .= '<p>orderId: ' . $_GET['orderId'] . '</p>';
+	$str .= '<p>订单号: ' . $_GET['orderId'] . '</p>';
+	$str .= '<p>支付单号: ' . $_GET['billId'] . '</p>';
 	$str .= '<br /><p><a href="/60001/index.php?action=query">查询支付单状态</a></p>';
 	$str .= '<p><a href="/60001/index.php?action=close">关闭支付单</a></p>';
 	$str .= '<p><a href="/60001/index.php">生成新支付单</a></p>';
@@ -65,7 +65,8 @@ if($action == 'callback' && isset($_GET['jumpType'])){
 
 define('IN_LEZPAY', 1);	//定义app入口
 
-require_once 'config.php';	//配置文件
+require_once 'config.sample.php';	//配置文件
+//require_once 'config.php';	//配置文件
 require_once 'lezpay.class.php';	//sdk
 
 
@@ -114,48 +115,21 @@ if(isset($_POST['orderId'])){
 			$result = $lezpay->queryPayBill($_POST);
 			if($result['flag']){
 				$str = '<h1>支付单查询成功</h1>';
-				$str .= '<p>orderId: ' . $result['orderId'] . '</p>';
-				$str .= '<p>billId: ' . $result['billId'] . '</p>';
-				$str .= '<table width="100%" border="1px" cellspacing="0">';
-				$str .= '<tr>';
-				$str .= '<th>billId</th>';
-				$str .= '<th>lezpayUrl</th>';
-				$str .= '<th>name</th>';
-				$str .= '<th>amount</th>';
-				$str .= '<th>userId</th>';
-				$str .= '<th>scoreApply</th>';
-				//$str .= '<th>urlNotice</th>';
-				//$str .= '<th>urlJump</th>';
-				$str .= '<th>balance</th>';
-				$str .= '<th>score</th>';
-				$str .= '<th>status</th>';
-				$str .= '<th>timeCreate</th>';
-				$str .= '<th>timeEnd</th>';
-				$str .= '<th>timePay</th>';
-				$str .= '</tr>';
+				$str .= '<p>订单号: ' . $result['orderId'] . '</p>';
+				$str .= '<p>支付单号: ' . $result['billId'] . '</p>';
+				$str .= '<p>支付项名称: ' . $result['name'] . '</p>';
+				$str .= '<p>商品或服务描述信息: ' . $result['describe'] . '</p>';
+				$str .= '<p>支付单金额: ' . $result['amount'] . '元</p>';
+				$str .= '<p>积分现金兑换比: ' . $result['scoreExchange'] . '元</p>';
+				$str .= '<p>积分抵扣启用状态: ' . $result['scoreApply'] . '</p>';
+				$str .= '<p>买家用户编号: ' . $result['userId'] . '</p>';
+				$str .= '<p>已付现金: ' . $result['balance'] . '</p>';
+				$str .= '<p>已付积分: ' . $result['score'] . '</p>';
+				$str .= '<p>支付单创建时间: ' . $result['timeCreate'] . '</p>';
+				$str .= '<p>支付单结束时间: ' . $result['timeEnd'] . '</p>';
+				$str .= '<p>支付单付款时间: ' . $result['timePay'] . '</p>';
+				$str .= '<p>乐众支付单访问链接: ' . $result['lezpayUrl'] . '</p>';
 
-				//循环输出该订单下所有支付单
-				$querys = $result['queryPayBillsInfoOutList'];
-				foreach($querys as $query){
-					$str .= '<tr>';
-					$str .= '<td>' . $query['billId'] . '</td>';
-					$str .= '<td>' . $query['lezpayUrl'] . '</td>';
-					$str .= '<td>' . $query['name'] . '</td>';
-					$str .= '<td>' . $query['amount'] . '</td>';
-					$str .= '<td>' . $query['userId'] . '</td>';
-					$str .= '<td>' . $query['scoreApply'] . '</td>';
-					//$str .= '<td>' . $query['urlNotice'] . '</td>';
-					//$str .= '<td>' . $query['urlJump'] . '</td>';
-					$str .= '<td>' . $query['balance'] . '</td>';
-					$str .= '<td>' . $query['score'] . '</td>';
-					$str .= '<td>' . $query['status'] . '</td>';
-					$str .= '<td>' . $query['timeCreate'] . '</td>';
-					$str .= '<td>' . $query['timeEnd'] . '</td>';
-					$str .= '<td>' . $query['timePay'] . '</td>';
-					$str .= '</tr>';
-				}
-
-				$str .= '</table>';
 				$str .= '<p><a href="/60001/index.php?action=settle">支付单结算</a></p>';
 				$str .= '<p><a href="/60001/index.php?action=close">关闭支付单</a></p>';
 			}else{
@@ -252,14 +226,6 @@ switch($action){
 				<input type="text" name="orderId" value="test0010" />
 			</label>
 		</p>
-		<?php if($action != 'create'){ ?>
-		<p>
-			<label>
-				<span>支付单号：</span>
-				<input type="text" name="billId" value="000013A" />
-			</label>
-		</p>
-		<?}?>
 		<?php if($action == 'create'){ ?>
 		<p>
 			<label>
@@ -363,7 +329,7 @@ switch($action){
 (function(window, undefined){
 	var win		= window,
 		doc		= document,
-		_stbId	= win.guangxi ? guangxi.getStbNum() || guangxi.System.newwork.macAddress.replace(/:/g, '').replace(/No Card/g, '') || document.all.ip.value : '12345678901',
+		_stbId	= win.guangxi ? guangxi.getStbNum() || guangxi.System.newwork.macAddress.replace(/:/g, '').replace(/No Card/g, '') || document.all.ip.value : '54521541511',
 		_bType	= win.iPanel ? /(Safari)|(Chrome)|(Firefox)/.test(navigator.userAgent) ? _stbId.length == 11 && _stbId.substring(2, 4) == '19' ? '0002' : win.iPanel.getGlobalVar('RESOLUTION_1280_720') ? '0003' : '0002' : '0001' : '0000';
 	doc.getElementById('stbId').value = _stbId;
 	_bType == '0001' && (doc.getElementById('payForm').method = 'get');
