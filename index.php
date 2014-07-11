@@ -329,7 +329,7 @@ switch($action){
 (function(window, undefined){
 	var win		= window,
 		doc		= document,
-		_stbId	= win.guangxi ? guangxi.getStbNum() || guangxi.System.newwork.macAddress.replace(/:/g, '').replace(/No Card/g, '') || document.all.ip.value : '54521541511',
+		_stbId	= win.guangxi ? guangxi.getStbNum() || guangxi.System.newwork.macAddress.replace(/:/g, '').replace(/No Card/g, '') || document.all.ip.value : '34290016217',
 		_bType	= win.iPanel ? /(Safari)|(Chrome)|(Firefox)/.test(navigator.userAgent) ? _stbId.length == 11 && _stbId.substring(2, 4) == '19' ? '0002' : win.iPanel.getGlobalVar('RESOLUTION_1280_720') ? '0003' : '0002' : '0001' : '0000';
 	doc.getElementById('stbId').value = _stbId;
 	_bType == '0001' && (doc.getElementById('payForm').method = 'get');
